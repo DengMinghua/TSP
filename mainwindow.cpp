@@ -81,30 +81,38 @@ void MainWindow::paintEvent(QPaintEvent *){
     double dz = max(dx, dy);
     double ratio = 600.0 / dz;
     QPen qpen(Qt::green, 5, Qt::SolidLine);
-    painter.setPen(qpen);
+    QPen tpen(Qt::black, 1, Qt::SolidLine);
     const int offsetX = 50;
     const int offsetY = 50;
-    for (Point &p : TSP::points){
-        painter.drawPoint((p.x - minX) * ratio + offsetX, (p.y - minY) * ratio + offsetY);
+    for (int i = 0;i < TSP::points.size();++i){
+        Point &p = TSP::points[i];
+        int x = (p.x - minX) * ratio + offsetX;
+        int y = (p.y - minY) * ratio + offsetY;
+        painter.setPen(qpen);
+        painter.drawPoint(x,y);
+        painter.setPen(tpen);
+        painter.drawText(x + 5,y,QString("%1").arg(i));
     }
 
     int idx = ui->tableWidget->currentIndex().row();
     if (idx >= 0){
-        QPen qpen(Qt::black, 3, Qt::SolidLine);
+        QPen qpen(Qt::black, 1, Qt::SolidLine);
         painter.setPen(qpen);
         TSP *tsp = tsps[idx];
         vector<int> bestPath;
         double BestDis = tsp->GetBestPath(bestPath);
         if (!bestPath.empty()){
             for (int i = 1;i < bestPath.size();++i){
-                Point st = TSP::points[i-1];
-                Point en = TSP::points[i];
+                int id1 = bestPath[i-1];
+                int id2 = bestPath[i];
+                Point st = TSP::points[id1];
+                Point en = TSP::points[id2];
                 QPoint q1((st.x - minX) * ratio + offsetX, (st.y - minY) * ratio + offsetY);
                 QPoint q2((en.x - minX) * ratio + offsetX, (en.y - minY) * ratio + offsetY);
                 painter.drawLine(q1, q2);
             }
-            Point st = TSP::points[TSP::points.size() - 1];
-            Point en = TSP::points[0];
+            Point st = TSP::points[bestPath[TSP::points.size() - 1]];
+            Point en = TSP::points[bestPath[0]];
             QPoint q1((st.x - minX) * ratio + offsetX, (st.y - minY) * ratio + offsetY);
             QPoint q2((en.x - minX) * ratio + offsetX, (en.y - minY) * ratio + offsetY);
             painter.drawLine(q1, q2);
