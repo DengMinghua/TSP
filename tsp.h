@@ -9,7 +9,11 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <set>
 #include <algorithm>
+#include <cfloat>
+#include <QThread>
+#include <QSemaphore>
 using namespace std;
 
 struct Point{
@@ -19,28 +23,35 @@ struct Point{
 };
 
 
-void read_tsp(string filename, vector<Point> &ps);
-
-class TSP{
+class TSP : public QThread{
 public:
     //读取tsp文件，第一行为节点数
     //第二行开始，节点(ID+1), x, y
     //节点编号从0开始
-    void read(string filename);
+    static void read(string filename);
     //节点i到节点j的距离
-    double get_dis(int i, int j);
+    static double get_dis(int i, int j);
     //计算路径总长度
-    double get_path_length(const vector<int> &path);
+    static double get_path_length(const vector<int> &path);
+    // 返回城市数量
+    static int get_city_size();
     //保存路径
     void save(string filename, const vector<int> &path);
-    // 返回城市数量
-    int getCitySize();
-    //设置最短路径path， 返回最短距离
-    virtual double update(vector<int> &path);
+    void SetBestPath(const vector<int> &path);
+    double GetBestPath(vector<int> &path);
+    TSP();
 public:
-    vector<Point> ps;
+    string name;
+public:
+    static vector<Point> points;
 private:
-    vector<vector<double> > dis;
+    static vector<vector<double> > dis;
+private:
+    vector<int> bestPath;
+    double bestDis;
+    QSemaphore sem;
+public:
+    int iter_time;
 };
 
 

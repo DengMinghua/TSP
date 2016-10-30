@@ -16,12 +16,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     tsp.cpp \
-    cthread.cpp \
-    backfire.cpp
+    greedy.cpp
 
 HEADERS  += mainwindow.h \
     tsp.h \
-    cthread.h \
-    backfire.h
+    greedy.h
 
 FORMS    += mainwindow.ui

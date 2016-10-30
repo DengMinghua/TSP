@@ -1,7 +1,15 @@
 #include "tsp.h"
 
-void read_tsp(string filename, vector<Point> &ps){
-    ps.clear();
+vector<Point> TSP::points;
+vector<vector<double> > TSP::dis;
+
+TSP::TSP():sem(1){
+    iter_time = 0;
+    bestDis = DBL_MAX;
+}
+
+void TSP::read(string filename){
+    points.clear();
     ifstream fin(filename.c_str());
     int n;
     int id;
@@ -9,18 +17,13 @@ void read_tsp(string filename, vector<Point> &ps){
     fin >> n;
     for (int i = 0;i < n;++i){
         fin >> id >> x >> y;
-        ps.push_back(Point(x,y));
+        points.push_back(Point(x,y));
     }
-}
-
-void TSP::read(string filename){
-    read_tsp(filename, ps);
-    int n = ps.size();
     dis = vector<vector<double> >(n, vector<double>(n, 0));
     for (int i = 0;i < n;++i){
         for (int j = i + 1;j < n;++j){
-            double dx = ps[i].x - ps[j].x;
-            double dy = ps[i].y - ps[j].y;
+            double dx = points[i].x - points[j].x;
+            double dy = points[i].y - points[j].y;
             double d = sqrt(dx*dx + dy*dy);
             dis[i][j] = d;
             dis[j][i] = d;
@@ -51,6 +54,39 @@ void TSP::save(string filename, const vector<int> &path){
     fout << "Cost: " << get_path_length(path) << endl;
 }
 
-int TSP::getCitySize(){
-    return ps.size();
+int TSP::get_city_size(){
+    return points.size();
+}
+
+void TSP::SetBestPath(const vector<int> &path){
+    sem.acquire();
+    int n = get_city_size();
+    vector<bool> used(n, 0);
+    bool err = false;
+    if (path.size() == n){
+        for (int p:path){
+            if (p < 0 || p >= n || used[p]){
+                err = true;
+                break;
+            }
+            used[p] = true;
+        }
+    }else{
+        err = true;
+    }
+    if (err){
+        bestPath.clear();
+        bestDis = DBL_MAX;
+    }else{
+        bestPath = path;
+        bestDis = get_path_length(bestPath);
+    }
+    sem.release();
+}
+
+double TSP::GetBestPath(vector<int> &path){
+    sem.acquire();
+    path = bestPath;
+    sem.release();
+    return bestDis;
 }

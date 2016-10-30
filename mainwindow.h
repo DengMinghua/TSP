@@ -2,14 +2,17 @@
 #define MAINWINDOW_H
 
 #include <map>
+#include <string>
 using namespace std;
 
 #include <QMainWindow>
 #include <QPen>
 #include <QPainter>
+#include <QTimer>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QDir>
 #include "tsp.h"
-#include "cthread.h"
-#include "backfire.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,13 +25,16 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+private slots:
+    void on_pushButton_clicked();
+    void OnTimer();
+
 private:
     void paintEvent(QPaintEvent *);
 private:
     Ui::MainWindow *ui;
-    vector<int> ppath;
-    map<string, CThread> algos;
-    vector<Point> ps;
+    vector<TSP*> tsps;
+    bool started;
 };
 
 #endif // MAINWINDOW_H
