@@ -5,12 +5,12 @@ Greedy::Greedy(){
 }
 
 void Greedy::run(){
-    while(1){
+    int n = get_city_size();
+    for(int kkk = 0;kkk < n;++kkk){
         ++iter_time;
-        int n = get_city_size();
         vector<bool> visd(n, false);
         visd[0] = true;
-        int last = 0;
+        int last = kkk;
         vector<int> path;
         path.push_back(0);
         for (int i = 1;i < n;++i){

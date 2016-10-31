@@ -2,16 +2,21 @@
 #include "ui_mainwindow.h"
 
 #include "greedy.h"
+#include "backfire.h"
+#include "ant.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    srand(time(0));
     started = false;
 
     //在这里加入算法
     tsps.push_back(new Greedy);
+    tsps.push_back(new BackFire);
+    tsps.push_back(new Ant);
 
     ui->tableWidget->setRowCount(tsps.size());
     for (size_t i = 0;i < tsps.size();++i){
@@ -132,7 +137,7 @@ void MainWindow::on_pushButton_clicked()
             for (TSP *tsp : tsps){
                 tsp->start();
             }
-            ui->pushButton->setText("Finish");
+            //ui->pushButton->setText("Finish");
             ui->pushButton->setEnabled(false);
             started = true;
         }else{

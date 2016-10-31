@@ -39,9 +39,9 @@ double TSP::get_dis(int i, int j){
 double TSP::get_path_length(const vector<int> &path){
     double s = 0;
     for (size_t i = 0;i < path.size() - 1;++i){
-        s += dis[i][i + 1];
+        s += dis[path[i]][path[i + 1]];
     }
-    s += dis[path.size() - 1][0];
+    s += dis[path[path.size() - 1]][path[0]];
     return s;
 }
 //保存路径
