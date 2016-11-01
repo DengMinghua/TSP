@@ -18,12 +18,14 @@ SOURCES += main.cpp\
     tsp.cpp \
     greedy.cpp \
     backfire.cpp \
-    ant.cpp
+    ant.cpp \
+    genetic.cpp
 
 HEADERS  += mainwindow.h \
     tsp.h \
     greedy.h \
     backfire.h \
-    ant.h
+    ant.h \
+    genetic.h
 
 FORMS    += mainwindow.ui
