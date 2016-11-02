@@ -4,6 +4,7 @@
 #include "greedy.h"
 #include "backfire.h"
 #include "ant.h"
+#include "genetic.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,9 +15,11 @@ MainWindow::MainWindow(QWidget *parent) :
     started = false;
 
     //在这里加入算法
+
     tsps.push_back(new Greedy);
     tsps.push_back(new BackFire);
     tsps.push_back(new Ant);
+    tsps.push_back(new Genetic);
 
     ui->tableWidget->setRowCount(tsps.size());
     for (size_t i = 0;i < tsps.size();++i){
